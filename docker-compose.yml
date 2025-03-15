@@ -94,6 +94,24 @@ services:
     - INSECURENET_HOST_IP=${INSECURENET_HOST_IP}
     - NATS_SURVEYOR_SERVERS=${NATS_SURVEYOR_SERVERS}
 
+  mine-python-processor:
+    build: ./dockers/mine-python-processor
+    init: true
+    container_name: mine-python-processor
+    networks:
+      intnet:
+    command: ['/bin/bash', '/config/configure-processor.sh']
+    volumes:
+    - ./config:/config
+    - ./code/mine-python-processor:/code/mine-python-processor
+    environment:
+    - SECURE_NET=${SECURE_NET}
+    - SECURENET_GATEWAY=${SECURENET_GATEWAY}
+    - INSECURE_NET=${INSECURE_NET}
+    - INSECURENET_GATEWAY=${INSECURENET_GATEWAY}
+    - SECURENET_HOST_IP=${SECURENET_HOST_IP}
+    - INSECURENET_HOST_IP=${INSECURENET_HOST_IP}
+    - NATS_SURVEYOR_SERVERS=${NATS_SURVEYOR_SERVERS}
 
   insec:
     build: ./dockers/insec
