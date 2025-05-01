@@ -1,7 +1,7 @@
 from scapy.all import IP, TCP, send
 import os
 
-def tcp_sender(covert_data):
+def tcp_sender():
     host = os.getenv('INSECURENET_HOST_IP')
     port = 8888
 
@@ -11,6 +11,8 @@ def tcp_sender(covert_data):
 
     try:
         while True:
+            covert_data = input("Enter covert data to embed in MSS field: ")
+
             # Craft TCP packet with MSS option containing covert data
             ip = IP(dst=host)
             tcp = TCP(dport=port, options=[('MSS', int(covert_data))])
@@ -24,5 +26,4 @@ def tcp_sender(covert_data):
         print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
-    covert_data = input("Enter covert data to embed in MSS field: ")
-    tcp_sender(covert_data)
+    tcp_sender()
