@@ -63,8 +63,22 @@ async def run():
                         if predicted_label == True:
                             log_file.write(f"[ALERT] Covert channel activity detected! MSS={mss_data}\n")
                             print(f"[ALERT] Covert channel activity detected! MSS={mss_data}")
+
+                            # --- Mitigation Strategy: Sanitize MSS value ---
+                            safe_mss = 1460
+                            new_options = []
+                            for opt in packet[TCP].options:
+                                if opt[0] == 'MSS':
+                                    new_options.append(('MSS', safe_mss))
+                                else:
+                                    new_options.append(opt)
+
+                            # Replace the TCP options with sanitized version
+                            packet[TCP].options = new_options
+                            log_file.write(f"[MITIGATION] MSS value replaced with {safe_mss}\n")
                         else:
                             log_file.write(f"[INFO] Normal traffic detected. MSS={mss_data}\n")
+
                     
         if subject == "inpktsec":
             await nc.publish("outpktinsec", msg.data)
